@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const StyledCard = styled.div`
   border-width: 4px;
@@ -76,6 +77,8 @@ const Explore = () => {
             </Link>
           ))}
       </div>
+
+      <Navbar />
     </div>
   );
 };
