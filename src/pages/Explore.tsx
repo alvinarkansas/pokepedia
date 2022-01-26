@@ -65,8 +65,12 @@ const Explore = () => {
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {pokemons.length &&
           pokemons.map((pokemon: { name: string; url: string }) => (
-            <Link to={"/" + pokemon.name} style={{ display: 'flex' }}>
-              <StyledCard key={pokemon.name}>
+            <Link
+              key={pokemon.name}
+              to={"/" + pokemon.name}
+              style={{ display: "flex" }}
+            >
+              <StyledCard>
                 <p>{pokemon.name}</p>
               </StyledCard>
             </Link>
