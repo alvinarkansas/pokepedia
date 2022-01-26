@@ -37,6 +37,8 @@ export const global = css`
     vertical-align: middle;
   }
 
+  a { text-decoration: none; }
+
   *,
   ::before,
   ::after {
