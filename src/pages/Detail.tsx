@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { FormEvent, ChangeEvent, useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
@@ -13,12 +13,23 @@ const Detail = () => {
   const [isCatching, setIsCatching] = useState(false);
   const [isEndPhase, setIsEndPhase] = useState(false);
   const [isCaught, setIsCaught] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [nicknameModal, setNicknameModal] = useState(false);
+  const [nicknameIsValid, setNicknameIsValid] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
 
   const loadPokemon = async () => {
-    const { data: { types, sprites, moves } } = await axios.get("https://pokeapi.co/api/v2/pokemon/" + name);
-    setTypes(types.map((type: any) => type.type.name));
-    setMoves(moves.map((move: any) => move.move.name));
-    setSprite(sprites.front_default);
+    try {
+      const {
+        data: { types, sprites, moves },
+      } = await axios.get("https://pokeapi.co/api/v2/pokemon/" + name);
+
+      setTypes(types.map((type: any) => type.type.name));
+      setMoves(moves.map((move: any) => move.move.name));
+      setSprite(sprites.front_default);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const catchPokemon = () => {
@@ -37,26 +48,41 @@ const Detail = () => {
 
     if (isCaught) {
       setIsCaught(true);
-      const currentCollection = localStorage.getItem("myPokemon");
-
-      const parsed: { name: string; nickname: string }[] = JSON.parse(currentCollection!) || [];
-
-      const pokemon = {
-        name: name!.toUpperCase(),
-        nickname: "JOKO",
-      };
-
-      // TODO: validate unique nickname
-
-      parsed.push(pokemon);
-
-      localStorage.setItem("myPokemon", JSON.stringify(parsed));
     } else {
       setIsCaught(false);
     }
     setTimeout(() => {
       setIsEndPhase(false);
+      isCaught && setNicknameModal(true);
     }, 1200);
+  };
+
+  const onNicknameSave = (e: FormEvent) => {
+    e.preventDefault();
+
+    const currentCollection = localStorage.getItem("myPokemon");
+    const parsed: { name: string; nickname: string }[] = JSON.parse(currentCollection!) || [];
+
+    let isUnique = true;
+    for (let collection of parsed) {
+      if (collection.nickname === nickname) {
+        setNicknameIsValid(false);
+        isUnique = false;
+        return;
+      } else {
+        !nicknameIsValid && setNicknameIsValid(true);
+        isUnique = true;
+      }
+    }
+
+    if (isUnique) {
+      parsed.push({
+        name: name!.toUpperCase(),
+        nickname,
+      });
+      localStorage.setItem("myPokemon", JSON.stringify(parsed));
+      setIsSaved(true);
+    }
   };
 
   useEffect(() => {
@@ -81,7 +107,7 @@ const Detail = () => {
 
             <div style={{ display: "grid", placeItems: "center" }}>
               <img src={pokeball} alt="pokeball" width={128} height={128} />
-              <span style={{ color: "white", fontSize: 40, textAlign: "center" }}>Oh no, {name} broke free</span>
+              <span style={{ color: "white", fontSize: 40, textAlign: "center" }}>Oh no, {name?.toUpperCase()} broke free</span>
             </div>
           </Modal>
           <Modal open={isCaught} overlay="light">
@@ -89,11 +115,52 @@ const Detail = () => {
 
             <div style={{ display: "grid", placeItems: "center" }}>
               <img src={pokeball} alt="pokeball" width={128} height={128} />
-              <span style={{ color: "white", fontSize: 40, textAlign: "center" }}>Gotcha! {name} was caught!</span>
+              <span style={{ color: "white", fontSize: 40, textAlign: "center" }}>Gotcha! {name?.toUpperCase()} was caught!</span>
             </div>
           </Modal>
         </>
       )}
+
+      <Modal open={nicknameModal}>
+        <div style={{ background: "#FFF", height: "100vh", width: "100vw", display: "grid", placeItems: "center" }}>
+          <img src={sprite} alt={name} width={320} height={320} />
+
+          {!isSaved ? (
+            <form onSubmit={onNicknameSave} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {nicknameIsValid ? (
+                <div className="pxl-border" style={{ textAlign: "left" }}>
+                  <p>Congratulations!</p>
+                  <p>You just caught a {name?.toUpperCase()}</p>
+                  <br />
+                  <p>Now please give {name?.toUpperCase()} a nickname...</p>
+                </div>
+              ) : (
+                <div className="pxl-border" style={{ textAlign: "left" }}>
+                  <p style={{ color: "#AF2A2A" }}>Nickname is taken</p>
+                  <p>Please pick another nickname...</p>
+                </div>
+              )}
+
+              <input className="pxl-border no-inset" onChange={(e: ChangeEvent<HTMLInputElement>) => setNickname(e.target.value.toUpperCase())} />
+
+              <Button type="submit">Save</Button>
+            </form>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div className="pxl-border" style={{ textAlign: "left" }}>
+                <p>Whoosh! {nickname} is now in your Pokemon list</p>
+              </div>
+
+              <Link to="/my-pokemon">
+                <Button>See My Pokemon</Button>
+              </Link>
+              <Link to="/">
+                <Button>Catch Another</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </Modal>
 
       <div
         style={{
@@ -156,8 +223,12 @@ const Detail = () => {
                 gap: 16,
               }}
             >
-              <Button>Explore</Button>
-              <Button>My Pokemon</Button>
+              <Link to="/" style={{ flexBasis: "50%", display: "flex" }}>
+                <Button>Explore</Button>
+              </Link>
+              <Link to="/my-pokemon" style={{ flexBasis: "50%", display: "flex" }}>
+                <Button>My Pokemon</Button>
+              </Link>
             </div>
           </div>
         </nav>

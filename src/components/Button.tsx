@@ -2,7 +2,7 @@ import React from "react";
 
 const Button = ({ children, ...props }: any) => {
   return (
-    <div
+    <button
       className="pxl-border"
       style={{
         display: "flex",
@@ -14,7 +14,7 @@ const Button = ({ children, ...props }: any) => {
       {...props}
     >
       {children}
-    </div>
+    </button>
   );
 };
 
