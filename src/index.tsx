@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { global } from "./styles";
+import { reset, global } from "./styles";
 import { Global } from "@emotion/react";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Global styles={global} />
+    <Global styles={[reset, global]} />
     <App />
   </React.StrictMode>,
   document.getElementById("root")
