@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
+import { IMyPokemon, IPokemon } from "../interface";
 
 const StyledCard = styled.div`
   border-width: 4px;
@@ -34,11 +35,6 @@ const StyledCard = styled.div`
   }
 `;
 
-interface IMyPokemon {
-  name: string;
-  nickname: string;
-}
-
 const MyPokemon = () => {
   const [pokemons, setPokemons] = useState<IMyPokemon[]>([]);
 
@@ -51,6 +47,34 @@ const MyPokemon = () => {
   useEffect(() => {
     loadMyPokemon();
   }, []);
+
+  useEffect(() => {
+    let results: { name: string; captured: number }[] = [];
+
+    pokemons.forEach((pokemon, idx) => {
+      let pokemonExists = false;
+
+      if (idx === 0) {
+        results.push({ name: pokemon.name, captured: 1 });
+      } else {
+        for (let result of results) {
+          if (result.name === pokemon.name) {
+            pokemonExists = true;
+          }
+        }
+
+        if (pokemonExists) {
+          let pokemonIdx = results.findIndex((el) => el.name === pokemon.name);
+          results[pokemonIdx].captured++;
+        } else {
+          results.push({ name: pokemon.name, captured: 1 });
+        }
+      }
+    });
+
+    console.log("🎗️", results);
+    localStorage.setItem("pokeSummary", JSON.stringify(results));
+  }, [pokemons]);
 
   const releasePokemon = (nickname: string) => {
     const newCollection = pokemons.filter((pokemon: IMyPokemon) => pokemon.nickname !== nickname);
