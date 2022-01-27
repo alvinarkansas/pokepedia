@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
-import { IMyPokemon, IPokemon } from "../interface";
+import { IMyPokemon } from "../interface";
 
 const StyledCard = styled.div`
   border-width: 4px;
@@ -37,6 +37,8 @@ const StyledCard = styled.div`
 
 const MyPokemon = () => {
   const [pokemons, setPokemons] = useState<IMyPokemon[]>([]);
+  const [navHeight, setNavHeight] = useState(0);
+  const navRef = createRef<HTMLDivElement>();
 
   const loadMyPokemon = () => {
     const rawPokemons = localStorage.getItem("myPokemon");
@@ -45,6 +47,7 @@ const MyPokemon = () => {
   };
 
   useEffect(() => {
+    setNavHeight(navRef.current?.clientHeight!);
     loadMyPokemon();
   }, []);
 
@@ -83,45 +86,47 @@ const MyPokemon = () => {
   };
 
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1>Challenge &amp; catch them all</h1>
-        <span>Total: {pokemons.length}</span>
+    <>
+      <div style={{ marginBottom: navHeight }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <h1>Challenge &amp; catch them all</h1>
+          <span>Total: {pokemons.length}</span>
+        </div>
+
+        {pokemons.length ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            {pokemons.length &&
+              pokemons.reverse().map((pokemon: { name: string; nickname: string }) => (
+                <div key={pokemon.nickname} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <StyledCard>
+                    <p style={{ fontSize: 24 }}>{pokemon.nickname}</p>
+                    <p>{pokemon.name}</p>
+                  </StyledCard>
+                  <span onClick={() => releasePokemon(pokemon.nickname)}>DELETE</span>
+                </div>
+              ))}
+          </div>
+        ) : (
+          <div
+            style={{
+              height: "90vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <p>You haven't caught any pokemon</p>
+            <Link to="/">
+              <Button>Explore</Button>
+            </Link>
+          </div>
+        )}
       </div>
 
-      {pokemons.length ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {pokemons.length &&
-            pokemons.reverse().map((pokemon: { name: string; nickname: string }) => (
-              <div key={pokemon.nickname} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <StyledCard>
-                  <p style={{ fontSize: 24 }}>{pokemon.nickname}</p>
-                  <p>{pokemon.name}</p>
-                </StyledCard>
-                <span onClick={() => releasePokemon(pokemon.nickname)}>DELETE</span>
-              </div>
-            ))}
-        </div>
-      ) : (
-        <div
-          style={{
-            height: "90vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <p>You haven't caught any pokemon</p>
-          <Link to="/">
-            <Button>Explore</Button>
-          </Link>
-        </div>
-      )}
-
-      <Navbar />
-    </div>
+      <Navbar ref={navRef} />
+    </>
   );
 };
 

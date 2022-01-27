@@ -1,9 +1,10 @@
-import React, { FormEvent, ChangeEvent, useEffect, useState } from "react";
+import React, { FormEvent, ChangeEvent, useEffect, useState, createRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import pokeball from "../images/pokeball.png";
+import Navbar from "../components/Navbar";
 
 const Detail = () => {
   const { name } = useParams();
@@ -17,6 +18,8 @@ const Detail = () => {
   const [nicknameModal, setNicknameModal] = useState(false);
   const [nicknameIsValid, setNicknameIsValid] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
+  const [navHeight, setNavHeight] = useState(0);
+  const navRef = createRef<HTMLDivElement>();
 
   const loadPokemon = async () => {
     try {
@@ -86,6 +89,7 @@ const Detail = () => {
   };
 
   useEffect(() => {
+    setNavHeight(navRef.current?.clientHeight!);
     loadPokemon();
   }, []);
 
@@ -167,6 +171,7 @@ const Detail = () => {
           display: "flex",
           flexDirection: "column",
           gap: 32,
+          marginBottom: navHeight,
         }}
       >
         <h2>{name}</h2>
@@ -190,49 +195,14 @@ const Detail = () => {
             </div>
           ))}
         </div>
-
-        <nav
-          style={{
-            position: "fixed",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 224,
-            background: "linear-gradient(180deg, #FDFDFD 0%, rgba(253, 253, 253, 0) 0.01%, rgba(253, 253, 253, 0.97) 30.37%, #FDFDFD 100%)",
-          }}
-        >
-          <div
-            style={{
-              padding: 16,
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <Button onClick={() => throwPokeball()}>
-              <img src={pokeball} alt="pokeball" width={32} height={32} />
-              <span>Catch</span>
-            </Button>
-            <div
-              style={{
-                display: "flex",
-                gap: 16,
-              }}
-            >
-              <Link to="/" style={{ flexBasis: "50%", display: "flex" }}>
-                <Button>Explore</Button>
-              </Link>
-              <Link to="/my-pokemon" style={{ flexBasis: "50%", display: "flex" }}>
-                <Button>My Pokemon</Button>
-              </Link>
-            </div>
-          </div>
-        </nav>
       </div>
+
+      <Navbar ref={navRef} fadeHeight={224}>
+        <Button onClick={() => throwPokeball()}>
+          <img src={pokeball} alt="pokeball" width={32} height={32} />
+          <span>Catch</span>
+        </Button>
+      </Navbar>
     </>
   );
 };

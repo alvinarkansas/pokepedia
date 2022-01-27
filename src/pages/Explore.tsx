@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import axios from "axios";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { IPokemon, IAllPokemonResponse } from "../interface";
 import pokeball from "../images/pokeball.png";
+import Button from "../components/Button";
 
 const StyledCard = styled.div`
   border-width: 4px;
@@ -59,21 +60,27 @@ const StyledCard = styled.div`
 
 const Explore = () => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
+  const [pokeURL, setPokeURL] = useState<string>("https://pokeapi.co/api/v2/pokemon?limit=30&offset=0");
+  const [navHeight, setNavHeight] = useState(0);
+  const navRef = createRef<HTMLDivElement>();
 
   const loadPokemons = async () => {
-    const { data } = await axios.get<IAllPokemonResponse>("https://pokeapi.co/api/v2/pokemon?limit=30&offset=0");
+    if (pokeURL) {
+      const { data } = await axios.get<IAllPokemonResponse>(pokeURL);
 
-    const pokeSummary: IPokemon[] = loadPokeSummary();
-    const mapped = data.results.map((result) => {
-      const summaryIdx = pokeSummary.findIndex((el) => el.name === result.name.toUpperCase());
-      return {
-        name: result.name,
-        url: result.url,
-        captured: pokeSummary[summaryIdx]?.captured || 0,
-      };
-    });
+      const pokeSummary: IPokemon[] = loadPokeSummary();
+      const mapped = data.results.map((result) => {
+        const summaryIdx = pokeSummary.findIndex((el) => el.name === result.name.toUpperCase());
+        return {
+          name: result.name,
+          url: result.url,
+          captured: pokeSummary[summaryIdx]?.captured || 0,
+        };
+      });
 
-    setPokemons(mapped);
+      setPokemons((prevState) => [...prevState, ...mapped]);
+      setPokeURL(data.next || "");
+    }
   };
 
   const loadPokeSummary = () => {
@@ -87,31 +94,37 @@ const Explore = () => {
   }, [pokemons]);
 
   useEffect(() => {
+    setNavHeight(navRef.current?.clientHeight!);
     loadPokemons();
   }, []);
 
   return (
-    <div>
-      <h1>Challenge &amp; catch them all</h1>
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        {pokemons.length &&
-          pokemons.map((pokemon: IPokemon) => (
-            <Link key={pokemon.name} to={"/" + pokemon.name} style={{ display: "flex" }}>
-              <StyledCard>
-                <p>{pokemon.name}</p>
-                {pokemon.captured ? (
-                  <div className="capture-qty">
-                    <img src={pokeball} alt="pokeball" width={16} height={16} />
-                    <span>x{pokemon.captured}</span>
-                  </div>
-                ) : null}
-              </StyledCard>
-            </Link>
-          ))}
+    <>
+      <div style={{ marginBottom: navHeight }}>
+        <h1>Challenge &amp; catch them all</h1>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {pokemons.length &&
+            pokemons.map((pokemon: IPokemon) => (
+              <Link key={pokemon.name} to={"/" + pokemon.name} style={{ display: "flex" }}>
+                <StyledCard>
+                  <p>{pokemon.name}</p>
+                  {pokemon.captured ? (
+                    <div className="capture-qty">
+                      <img src={pokeball} alt="pokeball" width={16} height={16} />
+                      <span>x{pokemon.captured}</span>
+                    </div>
+                  ) : null}
+                </StyledCard>
+              </Link>
+            ))}
+        </div>
+        <div style={{ paddingTop: "24px", display: "flex" }}>
+          <Button onClick={() => loadPokemons()}>Load More</Button>
+        </div>
       </div>
 
-      <Navbar />
-    </div>
+      <Navbar ref={navRef} />
+    </>
   );
 };
 

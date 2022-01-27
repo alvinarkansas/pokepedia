@@ -13,7 +13,7 @@ export interface IPokemon {
 
 export interface IAllPokemonResponse {
   count: number;
-  next: string | null;
-  previous: string | null;
+  next?: string;
+  previous?: string;
   results: IPokemon[];
 }

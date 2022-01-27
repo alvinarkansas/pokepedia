@@ -4,9 +4,11 @@ import Button from "./Button";
 
 interface INavbarProps {
   children?: React.ReactNode;
+  fadeHeight?: number;
+  [x: string]: any;
 }
 
-const Navbar = ({ children }: INavbarProps) => {
+const Navbar = React.forwardRef<HTMLDivElement, INavbarProps>(({ fadeHeight = 124, children }, ref) => {
   return (
     <nav
       style={{
@@ -14,9 +16,10 @@ const Navbar = ({ children }: INavbarProps) => {
         left: 0,
         right: 0,
         bottom: 0,
-        height: 224,
+        height: fadeHeight,
         background: "linear-gradient(180deg, #FDFDFD 0%, rgba(253, 253, 253, 0) 0.01%, rgba(253, 253, 253, 0.97) 30.37%, #FDFDFD 100%)",
       }}
+      ref={ref}
     >
       <div
         style={{
@@ -47,6 +50,6 @@ const Navbar = ({ children }: INavbarProps) => {
       </div>
     </nav>
   );
-};
+});
 
 export default Navbar;

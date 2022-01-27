@@ -1,6 +1,6 @@
-import React from "react";
+import React, { FC, HTMLProps, ButtonHTMLAttributes } from "react";
 
-const Button = ({ children, ...props }: any) => {
+const Button = ({ children, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
       className="pxl-border"
