@@ -7,6 +7,7 @@ export const reset = css`
 
   * {
     font-family: "VT323", monospace;
+    box-sizing: border-box;
   }
 
   h1,
@@ -51,6 +52,9 @@ export const reset = css`
 `;
 
 export const global = css`
+  body {
+    padding: 0 8px;
+  }
   .pxl-border {
     border-width: 4px;
     border-image-slice: 2;

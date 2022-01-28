@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import Button from "../components/Button";
 import Navbar from "../components/Navbar";
 import { IMyPokemon } from "../interface";
+import Text from "../components/Text";
 
 const StyledCard = styled.div`
   border-width: 4px;
@@ -88,9 +89,13 @@ const MyPokemon = () => {
   return (
     <>
       <div style={{ marginBottom: navHeight }}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h1>Challenge &amp; catch them all</h1>
-          <span>Total: {pokemons.length}</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "16px 0" }}>
+          <Text as="h1" variant="darker" size="lg">
+            My Pokemon
+          </Text>
+          <Text as="span" variant="darker" size="lg">
+            Total: {pokemons.length}
+          </Text>
         </div>
 
         {pokemons.length ? (
@@ -99,10 +104,10 @@ const MyPokemon = () => {
               pokemons.reverse().map((pokemon: { name: string; nickname: string }) => (
                 <div key={pokemon.nickname} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <StyledCard>
-                    <p style={{ fontSize: 24 }}>{pokemon.nickname}</p>
-                    <p>{pokemon.name}</p>
+                    <Text variant="darker" size="lg" style={{ fontSize: 24 }}>{pokemon.nickname}</Text>
+                    <Text>{pokemon.name}</Text>
                   </StyledCard>
-                  <span onClick={() => releasePokemon(pokemon.nickname)}>DELETE</span>
+                  <Text variant="error" onClick={() => releasePokemon(pokemon.nickname)}>DELETE</Text>
                 </div>
               ))}
           </div>
@@ -117,7 +122,7 @@ const MyPokemon = () => {
               gap: 8,
             }}
           >
-            <p>You haven't caught any pokemon</p>
+            <Text>You haven't caught any pokemon</Text>
             <Link to="/">
               <Button>Explore</Button>
             </Link>

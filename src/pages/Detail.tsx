@@ -1,10 +1,12 @@
 import React, { FormEvent, ChangeEvent, useEffect, useState, createRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { theme } from "../utils";
+import pokeball from "../images/pokeball.png";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
-import pokeball from "../images/pokeball.png";
 import Navbar from "../components/Navbar";
+import Text from "../components/Text";
 
 const Detail = () => {
   const { name } = useParams();
@@ -145,7 +147,10 @@ const Detail = () => {
                 </div>
               )}
 
-              <input className="pxl-border no-inset" onChange={(e: ChangeEvent<HTMLInputElement>) => setNickname(e.target.value.toUpperCase())} />
+              <input
+                className="pxl-border no-inset"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setNickname(e.target.value.toUpperCase())}
+              />
 
               <Button type="submit">Save</Button>
             </form>
@@ -174,33 +179,36 @@ const Detail = () => {
           marginBottom: navHeight,
         }}
       >
-        <h2>{name}</h2>
+        <div style={{ background: theme.color["neutral-500"], width: "40vw", height: "16px", marginTop: 16, position: "relative" }}>
+          <Text as="h1" variant="outlined" size="lg" style={{ position: "absolute", top: -16, left: 64 }}>
+            {name}
+          </Text>
+        </div>
 
         <img src={sprite} alt={name} width={256} height={256} />
 
         <div>
-          <h3>Type</h3>
+          <Text as="h3">Type</Text>
           {types.map((type, index: any) => (
             <div key={index} className="pxl-border inset">
-              <span>{type}</span>
+              <Text>{type}</Text>
             </div>
           ))}
         </div>
 
         <div>
-          <h3>Moves</h3>
+          <Text as="h3">Moves</Text>
           {moves.map((move, index: any) => (
             <div key={index} className="pxl-border" style={{ marginBottom: 16, marginRight: 16 }}>
-              <span>{move}</span>
+              <Text>{move}</Text>
             </div>
           ))}
         </div>
       </div>
 
       <Navbar ref={navRef} fadeHeight={224}>
-        <Button onClick={() => throwPokeball()}>
-          <img src={pokeball} alt="pokeball" width={32} height={32} />
-          <span>Catch</span>
+        <Button variant="moltres" onClick={() => throwPokeball()} size="xl" icon={pokeball}>
+          Catch
         </Button>
       </Navbar>
     </>

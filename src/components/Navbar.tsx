@@ -44,7 +44,7 @@ const Navbar = React.forwardRef<HTMLDivElement, INavbarProps>(({ fadeHeight = 12
             <Button>Explore</Button>
           </Link>
           <Link to="/my-pokemon" style={{ flexBasis: "50%", display: "flex" }}>
-            <Button>My Pokemon</Button>
+            <Button variant="zapdos">My Pokemon</Button>
           </Link>
         </div>
       </div>

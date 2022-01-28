@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import { IPokemon, IAllPokemonResponse } from "../interface";
 import pokeball from "../images/pokeball.png";
 import Button from "../components/Button";
+import Text from "../components/Text";
 
 const StyledCard = styled.div`
   border-width: 4px;
@@ -101,17 +102,19 @@ const Explore = () => {
   return (
     <>
       <div style={{ marginBottom: navHeight }}>
-        <h1>Challenge &amp; catch them all</h1>
+        <Text as="h1" variant="darker" size="lg" style={{ margin: "16px 0" }}>
+          Challenge &amp; catch them all
+        </Text>
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {pokemons.length &&
             pokemons.map((pokemon: IPokemon) => (
               <Link key={pokemon.name} to={"/" + pokemon.name} style={{ display: "flex" }}>
                 <StyledCard>
-                  <p>{pokemon.name}</p>
+                  <Text>{pokemon.name}</Text>
                   {pokemon.captured ? (
                     <div className="capture-qty">
                       <img src={pokeball} alt="pokeball" width={16} height={16} />
-                      <span>x{pokemon.captured}</span>
+                      <Text>x{pokemon.captured}</Text>
                     </div>
                   ) : null}
                 </StyledCard>
