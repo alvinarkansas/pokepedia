@@ -7,6 +7,7 @@ import Button from "../components/Button";
 import Text from "../components/Text";
 import PokeCard from "../components/PokemonCard";
 import styled from "@emotion/styled";
+import { useGlobalContext } from "../context";
 
 const Page = styled("div")({
   padding: "0 16px",
@@ -39,19 +40,19 @@ const Explore = () => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
   const [pokeURL, setPokeURL] = useState<string>("https://pokeapi.co/api/v2/pokemon?limit=30&offset=0");
   const [navHeight, setNavHeight] = useState(0);
+  const { state } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 
   const loadPokemons = async () => {
     if (pokeURL) {
       const { data } = await axios.get<IAllPokemonResponse>(pokeURL);
 
-      const pokeSummary: IPokemon[] = loadPokeSummary();
       const mapped = data.results.map((result) => {
-        const summaryIdx = pokeSummary.findIndex((el) => el.name === result.name.toUpperCase());
+        const summaryIdx = state.pokeSummary!.findIndex((el) => el.name === result.name.toUpperCase());
         return {
           name: result.name,
           url: result.url,
-          captured: pokeSummary[summaryIdx]?.captured || 0,
+          captured: state.pokeSummary![summaryIdx]?.captured || 0,
         };
       });
 
@@ -59,16 +60,6 @@ const Explore = () => {
       setPokeURL(data.next || "");
     }
   };
-
-  const loadPokeSummary = () => {
-    const pokeSummary = localStorage.getItem("pokeSummary");
-    const parsed = JSON.parse(pokeSummary!) || [];
-    return parsed;
-  };
-
-  useEffect(() => {
-    console.log("🍀🍀🍀", pokemons);
-  }, [pokemons]);
 
   useEffect(() => {
     setNavHeight(navRef.current?.clientHeight!);

@@ -4,11 +4,14 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { reset, global } from "./styles";
 import { Global } from "@emotion/react";
+import { GlobalProvider } from "./context";
 
 ReactDOM.render(
   <React.StrictMode>
     <Global styles={[reset, global]} />
-    <App />
+    <GlobalProvider>
+      <App />
+    </GlobalProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

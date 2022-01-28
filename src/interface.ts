@@ -9,6 +9,11 @@ export interface IPokemon {
   url?: string;
 }
 
+export interface IPokeSummary {
+  name: string;
+  captured: number;
+}
+
 /* Poke API response */
 
 export interface IAllPokemonResponse {

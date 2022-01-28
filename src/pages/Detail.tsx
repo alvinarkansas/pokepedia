@@ -10,6 +10,8 @@ import Navbar from "../components/Navbar";
 import Text from "../components/Text";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
+import { useGlobalContext } from "../context";
+import { generatePokeSummary } from "../helpers";
 
 const Page = styled("div")({
   "#pokeball-bg": {
@@ -122,6 +124,7 @@ const Detail = () => {
   const [nicknameIsValid, setNicknameIsValid] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
+  const { setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 
   const loadPokemon = async () => {
@@ -187,6 +190,7 @@ const Detail = () => {
         nickname,
       });
       localStorage.setItem("myPokemon", JSON.stringify(parsed));
+      setState({ pokeSummary: generatePokeSummary(parsed) });
       setIsSaved(true);
     }
   };

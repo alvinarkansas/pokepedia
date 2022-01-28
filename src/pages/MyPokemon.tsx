@@ -8,6 +8,8 @@ import Text from "../components/Text";
 import PokeCard from "../components/PokemonCard";
 import DeleteButton from "../components/ButtonIcon";
 import { spacing } from "../utils";
+import { useGlobalContext } from "../context";
+import { generatePokeSummary } from "../helpers";
 
 const Page = styled("div")({
   padding: "0 16px",
@@ -47,6 +49,7 @@ const EmptyState = styled("div")({
 const MyPokemon = () => {
   const [pokemons, setPokemons] = useState<IMyPokemon[]>([]);
   const [navHeight, setNavHeight] = useState(0);
+  const { setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 
   const loadMyPokemon = () => {
@@ -60,38 +63,11 @@ const MyPokemon = () => {
     loadMyPokemon();
   }, []);
 
-  useEffect(() => {
-    let results: { name: string; captured: number }[] = [];
-
-    pokemons.forEach((pokemon, idx) => {
-      let pokemonExists = false;
-
-      if (idx === 0) {
-        results.push({ name: pokemon.name, captured: 1 });
-      } else {
-        for (let result of results) {
-          if (result.name === pokemon.name) {
-            pokemonExists = true;
-          }
-        }
-
-        if (pokemonExists) {
-          let pokemonIdx = results.findIndex((el) => el.name === pokemon.name);
-          results[pokemonIdx].captured++;
-        } else {
-          results.push({ name: pokemon.name, captured: 1 });
-        }
-      }
-    });
-
-    console.log("🎗️", results);
-    localStorage.setItem("pokeSummary", JSON.stringify(results));
-  }, [pokemons]);
-
   const releasePokemon = (nickname: string) => {
     const newCollection = pokemons.filter((pokemon: IMyPokemon) => pokemon.nickname !== nickname);
     localStorage.setItem("myPokemon", JSON.stringify(newCollection));
     loadMyPokemon();
+    setState({ pokeSummary: generatePokeSummary(newCollection) });
   };
 
   return (
