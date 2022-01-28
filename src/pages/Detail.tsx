@@ -1,12 +1,113 @@
 import React, { FormEvent, ChangeEvent, useEffect, useState, createRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { theme } from "../utils";
+import { theme, spacing, fontSize } from "../utils";
 import pokeball from "../images/pokeball.png";
+import pokeballTransparent from "../images/pokeball-transparent.png";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
 import Text from "../components/Text";
+import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
+
+const Page = styled("div")({
+  "#pokeball-bg": {
+    position: "fixed",
+    right: "-64vw",
+    top: 0,
+    zIndex: -1,
+  },
+});
+
+const PokeImg = styled("img")({
+  margin: "0 auto",
+});
+
+const PokeName = styled("div")(
+  {
+    position: "relative",
+    height: "40px",
+    width: "65vw",
+    marginTop: spacing.xl,
+    h1: {
+      textTransform: "uppercase",
+      position: "absolute",
+      top: -20,
+      left: 24,
+    },
+    div: {
+      position: "absolute",
+      width: "100%",
+      background: theme.color["neutral-600"],
+      bottom: 0,
+    },
+  },
+  `
+    div:nth-child(1) {
+      height: 1.75rem;
+      right: 20px;
+    }
+    div:nth-child(2) {
+      height: 1.25rem;
+      right: 10px;
+    }
+    div:nth-child(3) {
+      height: 0.75rem;
+      right: 0;
+    }
+  `
+);
+
+const Content = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  gap: spacing.xl,
+  padding: "0 16px",
+  h3: {
+    marginBottom: spacing.base,
+  },
+});
+
+const shake = keyframes`
+  0 { transform: translate(0, 0) rotate(0); }
+  20% { transform: translate(-10px, 0) rotate(-20deg); }
+  30% { transform: translate(10px, 0) rotate(20deg); }
+  50% { transform: translate(-10px, 0) rotate(-10deg); }
+  60% { transform: translate(10px, 0) rotate(10deg); }
+  100% { transform: translate(0, 0) rotate(0); }
+`;
+
+const CatchingModal = styled("div")`
+  .pokeball {
+    animation: ${shake} 1.25s cubic-bezier(0.36, 0.07, 0.19, 0.97) 2;
+  }
+`;
+
+const PostCatchModal = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  p: {
+    textAlign: "center",
+  },
+});
+
+const NicknamingModal = styled("div")({
+  width: "100vw",
+  padding: "0 16px",
+});
+
+const NicknamingForm = styled("form")({
+  display: "flex",
+  flexDirection: "column",
+  gap: spacing.base,
+});
+
+const Input = styled("input")({
+  fontSize: fontSize.lg,
+});
 
 const Detail = () => {
   const { name } = useParams();
@@ -98,113 +199,121 @@ const Detail = () => {
   return (
     <>
       <Modal open={isCatching}>
-        <img src={sprite} alt={name} width={320} height={320} />
+        <CatchingModal>
+          <PokeImg src={sprite} alt={name} width={320} height={320} />
 
-        <div style={{ display: "grid", placeItems: "center" }}>
-          <img src={pokeball} alt="pokeball" width={128} height={128} />
-          <span style={{ color: "white", fontSize: 40 }}>Catching...</span>
-        </div>
+          <div style={{ display: "grid", placeItems: "center" }}>
+            <img className="pokeball" src={pokeball} alt="pokeball" width={128} height={128} />
+            <Text variant="outlined" size="xl">
+              Catching...
+            </Text>
+          </div>
+        </CatchingModal>
       </Modal>
 
       {isEndPhase && (
         <>
           <Modal open={!isCaught} overlay="error">
-            <img src={sprite} alt={name} width={320} height={320} />
+            <PostCatchModal>
+              <PokeImg src={sprite} alt={name} width={320} height={320} />
 
-            <div style={{ display: "grid", placeItems: "center" }}>
               <img src={pokeball} alt="pokeball" width={128} height={128} />
-              <span style={{ color: "white", fontSize: 40, textAlign: "center" }}>Oh no, {name?.toUpperCase()} broke free</span>
-            </div>
+              <Text variant="outlined" size="xl">
+                Oh no, {name?.toUpperCase()} broke free
+              </Text>
+            </PostCatchModal>
           </Modal>
           <Modal open={isCaught} overlay="light">
-            <img src={sprite} alt={name} width={320} height={320} />
+            <PostCatchModal>
+              <PokeImg src={sprite} alt={name} width={320} height={320} />
 
-            <div style={{ display: "grid", placeItems: "center" }}>
               <img src={pokeball} alt="pokeball" width={128} height={128} />
-              <span style={{ color: "white", fontSize: 40, textAlign: "center" }}>Gotcha! {name?.toUpperCase()} was caught!</span>
-            </div>
+              <Text variant="outlined" size="xl">
+                Gotcha! {name?.toUpperCase()} was caught!
+              </Text>
+            </PostCatchModal>
           </Modal>
         </>
       )}
 
-      <Modal open={nicknameModal}>
-        <div style={{ background: "#FFF", height: "100vh", width: "100vw", display: "grid", placeItems: "center" }}>
-          <img src={sprite} alt={name} width={320} height={320} />
+      <Modal open={nicknameModal} overlay="light" solid>
+        <NicknamingModal>
+          <PokeImg src={sprite} alt={name} width={320} height={320} />
 
           {!isSaved ? (
-            <form onSubmit={onNicknameSave} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <NicknamingForm onSubmit={onNicknameSave}>
               {nicknameIsValid ? (
                 <div className="pxl-border" style={{ textAlign: "left" }}>
-                  <p>Congratulations!</p>
-                  <p>You just caught a {name?.toUpperCase()}</p>
+                  <Text>Congratulations!</Text>
+                  <Text>You just caught a {name?.toUpperCase()}</Text>
                   <br />
-                  <p>Now please give {name?.toUpperCase()} a nickname...</p>
+                  <Text>Now please give {name?.toUpperCase()} a nickname...</Text>
                 </div>
               ) : (
                 <div className="pxl-border" style={{ textAlign: "left" }}>
-                  <p style={{ color: "#AF2A2A" }}>Nickname is taken</p>
-                  <p>Please pick another nickname...</p>
+                  <Text variant="error">Nickname is taken</Text>
+                  <Text>Please pick another nickname...</Text>
                 </div>
               )}
 
-              <input
+              <Input
+                required
                 className="pxl-border no-inset"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setNickname(e.target.value.toUpperCase())}
               />
 
               <Button type="submit">Save</Button>
-            </form>
+            </NicknamingForm>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", flexDirection: "column", gap: 16 }}>
               <div className="pxl-border" style={{ textAlign: "left" }}>
-                <p>Whoosh! {nickname} is now in your Pokemon list</p>
+                <Text>Whoosh! {nickname} is now in your Pokemon list</Text>
               </div>
 
               <Link to="/my-pokemon">
-                <Button>See My Pokemon</Button>
+                <Button variant="zapdos">See My Pokemon</Button>
               </Link>
               <Link to="/">
                 <Button>Catch Another</Button>
               </Link>
             </div>
           )}
-        </div>
+        </NicknamingModal>
       </Modal>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 32,
-          marginBottom: navHeight,
-        }}
-      >
-        <div style={{ background: theme.color["neutral-500"], width: "40vw", height: "16px", marginTop: 16, position: "relative" }}>
-          <Text as="h1" variant="outlined" size="lg" style={{ position: "absolute", top: -16, left: 64 }}>
+      <Page style={{ marginBottom: navHeight }}>
+        <img id="pokeball-bg" src={pokeballTransparent} alt="pokeball background" width={512} height={512} />
+        <PokeName>
+          <div />
+          <div />
+          <div />
+          <Text as="h1" variant="outlined" size="xl">
             {name}
           </Text>
-        </div>
+        </PokeName>
 
-        <img src={sprite} alt={name} width={256} height={256} />
+        <PokeImg src={sprite} alt={name} width={256} height={256} />
 
-        <div>
-          <Text as="h3">Type</Text>
-          {types.map((type, index: any) => (
-            <div key={index} className="pxl-border inset">
-              <Text>{type}</Text>
-            </div>
-          ))}
-        </div>
+        <Content>
+          <div>
+            <Text as="h3">Type</Text>
+            {types.map((type, index: any) => (
+              <div key={index} className="pxl-border inset">
+                <Text>{type}</Text>
+              </div>
+            ))}
+          </div>
 
-        <div>
-          <Text as="h3">Moves</Text>
-          {moves.map((move, index: any) => (
-            <div key={index} className="pxl-border" style={{ marginBottom: 16, marginRight: 16 }}>
-              <Text>{move}</Text>
-            </div>
-          ))}
-        </div>
-      </div>
+          <div>
+            <Text as="h3">Moves</Text>
+            {moves.map((move, index: any) => (
+              <div key={index} className="pxl-border" style={{ marginBottom: 16, marginRight: 16 }}>
+                <Text>{move}</Text>
+              </div>
+            ))}
+          </div>
+        </Content>
+      </Page>
 
       <Navbar ref={navRef} fadeHeight={224}>
         <Button variant="moltres" onClick={() => throwPokeball()} size="xl" icon={pokeball}>

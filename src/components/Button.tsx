@@ -15,6 +15,7 @@ const getStyle = ({ variant = "articuno" }: IButtonProps) => {
     gap: 8,
     justifyContent: "center",
     alignItems: "center",
+    cursor: "pointer",
   };
   switch (variant) {
     case "zapdos":
@@ -27,7 +28,7 @@ const getStyle = ({ variant = "articuno" }: IButtonProps) => {
         "&:hover": {
           backgroundColor: theme.color["zapdos-100"],
         },
-        "&:active:not(.is-disabled)::after": {
+        "&:active::after": {
           boxShadow: `inset 4px 4px ${theme.color["zapdos-300"]}`,
         },
       };
@@ -41,7 +42,7 @@ const getStyle = ({ variant = "articuno" }: IButtonProps) => {
         "&:hover": {
           backgroundColor: theme.color["moltres-100"],
         },
-        "&:active:not(.is-disabled)::after": {
+        "&:active::after": {
           boxShadow: `inset 4px 4px ${theme.color["moltres-300"]}`,
         },
       };
@@ -55,7 +56,7 @@ const getStyle = ({ variant = "articuno" }: IButtonProps) => {
         "&:hover": {
           backgroundColor: theme.color["articuno-100"],
         },
-        "&:active:not(.is-disabled)::after": {
+        "&:active::after": {
           boxShadow: `inset 4px 4px ${theme.color["articuno-300"]}`,
         },
       };

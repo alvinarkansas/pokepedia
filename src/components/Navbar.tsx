@@ -13,6 +13,7 @@ const Navbar = React.forwardRef<HTMLDivElement, INavbarProps>(({ fadeHeight = 12
     <nav
       style={{
         position: "fixed",
+        zIndex: 1,
         left: 0,
         right: 0,
         bottom: 0,

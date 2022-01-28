@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { theme } from "../utils";
 
 export const reset = css`
   :root {
@@ -10,6 +11,8 @@ export const reset = css`
     box-sizing: border-box;
   }
 
+  body,
+  html,
   h1,
   h2,
   h3,
@@ -47,14 +50,10 @@ export const reset = css`
   ::after {
     border-width: 0;
     border-style: solid;
-    border-color: #132529;
   }
 `;
 
 export const global = css`
-  body {
-    padding: 0 8px;
-  }
   .pxl-border {
     border-width: 4px;
     border-image-slice: 2;
@@ -69,9 +68,7 @@ export const global = css`
     text-align: center;
     vertical-align: middle;
     user-select: none;
-    color: #212529;
-    background-color: #fff;
-    cursor: pointer;
+    background-color: ${theme.color["neutral-100"]};
     text-transform: uppercase;
     flex-grow: 1;
 
@@ -82,17 +79,7 @@ export const global = css`
       bottom: -4px;
       left: -4px;
       content: "";
-      box-shadow: inset -4px -4px #adafbc;
-    }
-
-    &:hover {
-      color: #212529;
-      text-decoration: none;
-      background-color: #e7e7e7;
-    }
-
-    &:active:not(.is-disabled)::after {
-      box-shadow: inset 4px 4px #adafbc;
+      box-shadow: inset -4px -4px ${theme.color["neutral-300"]};
     }
   }
 `;

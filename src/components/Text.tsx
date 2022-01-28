@@ -20,7 +20,7 @@ const getStyle = ({ variant = "default", size = "base", as = "p" }: ITextProps) 
     case "darker":
       return {
         as,
-        color: theme.color["neutral-500"],
+        color: theme.color["neutral-600"],
         textShadow: theme.textShadow[`light-${size}`],
         fontSize: fontSize[size],
       };
@@ -34,7 +34,7 @@ const getStyle = ({ variant = "default", size = "base", as = "p" }: ITextProps) 
     default:
       return {
         as,
-        color: theme.color["neutral-400"],
+        color: theme.color["neutral-500"],
         textShadow: theme.textShadow[`light-${size}`],
         fontSize: fontSize[size],
       };

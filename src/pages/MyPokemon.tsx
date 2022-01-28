@@ -5,36 +5,44 @@ import Button from "../components/Button";
 import Navbar from "../components/Navbar";
 import { IMyPokemon } from "../interface";
 import Text from "../components/Text";
+import PokeCard from "../components/PokemonCard";
+import DeleteButton from "../components/ButtonIcon";
+import { spacing } from "../utils";
 
-const StyledCard = styled.div`
-  border-width: 4px;
-  border-image-slice: 2;
-  border-image-width: 2;
-  border-image-repeat: stretch;
-  border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8" ?><svg version="1.1" width="5" height="5" xmlns="http://www.w3.org/2000/svg"><path d="M2 1 h1 v1 h-1 z M1 2 h1 v1 h-1 z M3 2 h1 v1 h-1 z M2 3 h1 v1 h-1 z" fill="rgb(33,37,41)" /></svg>');
-  border-image-outset: 2;
-  position: relative;
-  display: inline-block;
-  padding: 6px 8px;
-  margin: 4px;
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  color: #212529;
-  background-color: #fff;
-  text-transform: uppercase;
-  flex-grow: 1;
+const Page = styled("div")({
+  padding: "0 16px",
+});
 
-  &::after {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    bottom: -4px;
-    left: -4px;
-    content: "";
-    box-shadow: inset -4px -4px #adafbc;
+const Header = styled("header")({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  margin: "16px 0",
+});
+
+const Grid = styled("div")(
+  {
+    display: "grid",
+    gap: "16px",
+  },
+  `
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-`;
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  `
+);
+
+const EmptyState = styled("div")({
+  height: "50vh",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: spacing.base,
+});
 
 const MyPokemon = () => {
   const [pokemons, setPokemons] = useState<IMyPokemon[]>([]);
@@ -88,47 +96,36 @@ const MyPokemon = () => {
 
   return (
     <>
-      <div style={{ marginBottom: navHeight }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "16px 0" }}>
+      <Page style={{ marginBottom: navHeight }}>
+        <Header>
           <Text as="h1" variant="darker" size="lg">
             My Pokemon
           </Text>
           <Text as="span" variant="darker" size="lg">
             Total: {pokemons.length}
           </Text>
-        </div>
+        </Header>
 
         {pokemons.length ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <Grid>
             {pokemons.length &&
               pokemons.reverse().map((pokemon: { name: string; nickname: string }) => (
                 <div key={pokemon.nickname} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <StyledCard>
-                    <Text variant="darker" size="lg" style={{ fontSize: 24 }}>{pokemon.nickname}</Text>
-                    <Text>{pokemon.name}</Text>
-                  </StyledCard>
-                  <Text variant="error" onClick={() => releasePokemon(pokemon.nickname)}>DELETE</Text>
+                  <PokeCard name={pokemon.name} nickname={pokemon.nickname}>
+                    <DeleteButton onClick={() => releasePokemon(pokemon.nickname)} />
+                  </PokeCard>
                 </div>
               ))}
-          </div>
+          </Grid>
         ) : (
-          <div
-            style={{
-              height: "90vh",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
+          <EmptyState>
             <Text>You haven't caught any pokemon</Text>
             <Link to="/">
               <Button>Explore</Button>
             </Link>
-          </div>
+          </EmptyState>
         )}
-      </div>
+      </Page>
 
       <Navbar ref={navRef} />
     </>

@@ -1,63 +1,39 @@
-import React, { useState, useEffect, useRef, createRef } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import axios from "axios";
-import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { IPokemon, IAllPokemonResponse } from "../interface";
-import pokeball from "../images/pokeball.png";
 import Button from "../components/Button";
 import Text from "../components/Text";
+import PokeCard from "../components/PokemonCard";
+import styled from "@emotion/styled";
 
-const StyledCard = styled.div`
-  border-width: 4px;
-  border-image-slice: 2;
-  border-image-width: 2;
-  border-image-repeat: stretch;
-  border-image-source: url('data:image/svg+xml;utf8,<?xml version="1.0" encoding="UTF-8" ?><svg version="1.1" width="5" height="5" xmlns="http://www.w3.org/2000/svg"><path d="M2 1 h1 v1 h-1 z M1 2 h1 v1 h-1 z M3 2 h1 v1 h-1 z M2 3 h1 v1 h-1 z" fill="rgb(33,37,41)" /></svg>');
-  border-image-outset: 2;
-  position: relative;
-  display: inline-block;
-  padding: 6px 8px;
-  margin: 4px;
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  color: #212529;
-  background-color: #fff;
-  cursor: pointer;
-  text-transform: uppercase;
-  flex-grow: 1;
-  position: relative;
+const Page = styled("div")({
+  padding: "0 16px",
+  h1: {
+    padding: "16px 0",
+  },
+});
 
-  &::after {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    bottom: -4px;
-    left: -4px;
-    content: "";
-    box-shadow: inset -4px -4px #adafbc;
+const Grid = styled("div")(
+  {
+    display: "grid",
+    gap: "16px",
+  },
+  `
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  &:hover {
-    color: #212529;
-    text-decoration: none;
-    background-color: #e7e7e7;
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+  `
+);
 
-  &:active:not(.is-disabled)::after {
-    box-shadow: inset 4px 4px #adafbc;
-  }
-
-  .capture-qty {
-    position: absolute;
-    top: 4px;
-    right: 8px;
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-`;
+const Footer = styled("div")({
+  display: "flex",
+  paddingTop: "24px",
+});
 
 const Explore = () => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
@@ -101,30 +77,22 @@ const Explore = () => {
 
   return (
     <>
-      <div style={{ marginBottom: navHeight }}>
-        <Text as="h1" variant="darker" size="lg" style={{ margin: "16px 0" }}>
+      <Page style={{ marginBottom: navHeight }}>
+        <Text as="h1" variant="darker" size="lg">
           Challenge &amp; catch them all
         </Text>
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <Grid>
           {pokemons.length &&
             pokemons.map((pokemon: IPokemon) => (
               <Link key={pokemon.name} to={"/" + pokemon.name} style={{ display: "flex" }}>
-                <StyledCard>
-                  <Text>{pokemon.name}</Text>
-                  {pokemon.captured ? (
-                    <div className="capture-qty">
-                      <img src={pokeball} alt="pokeball" width={16} height={16} />
-                      <Text>x{pokemon.captured}</Text>
-                    </div>
-                  ) : null}
-                </StyledCard>
+                <PokeCard name={pokemon.name} captured={pokemon.captured} />
               </Link>
             ))}
-        </div>
-        <div style={{ paddingTop: "24px", display: "flex" }}>
+        </Grid>
+        <Footer>
           <Button onClick={() => loadPokemons()}>Load More</Button>
-        </div>
-      </div>
+        </Footer>
+      </Page>
 
       <Navbar ref={navRef} />
     </>

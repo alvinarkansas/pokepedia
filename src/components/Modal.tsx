@@ -1,55 +1,46 @@
-import React from "react";
+import React, { HTMLAttributes } from "react";
+import styled from "@emotion/styled";
+import { theme } from "../utils";
 
-interface IModalProps {
+interface IModalProps extends HTMLAttributes<HTMLDivElement> {
   open: boolean;
   overlay?: "dark" | "light" | "error";
-  children: React.ReactNode;
+  solid?: boolean;
 }
 
-const Modal = ({ children, open, overlay = "dark" }: IModalProps) => {
+const Overlay = styled("div")(({ overlay = "dark", open = false, solid = false }: IModalProps) => ({
+  position: "fixed",
+  inset: 0,
+  width: "100vw",
+  height: "100vh",
+  background:
+    overlay === "dark" ? theme.color["neutral-600"] : overlay === "light" ? theme.color["neutral-100"] : theme.color["moltres-200"],
+  opacity: solid ? 1 : 0.9,
+  zIndex: open ? 50 : 0,
+}));
+
+const Content = styled("div")(({ open = false }: IModalProps) => ({
+  position: "fixed",
+  inset: 0,
+  width: "100vw",
+  height: "100vh",
+  zIndex: open ? 50 : 0,
+  "> div": {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh",
+  },
+}));
+
+const Modal = ({ children, open, overlay = "dark", solid }: IModalProps) => {
   return open ? (
     <>
-      <div
-        id="modal-overlay"
-        style={{
-          position: "fixed",
-          inset: 0,
-          width: "100vw",
-          height: "100vh",
-          margin: "0 auto",
-          background:
-            overlay === "dark"
-              ? "#132529"
-              : overlay === "light"
-              ? "#FFF"
-              : "#AF2A2A",
-          opacity: 0.9,
-          zIndex: 50,
-        }}
-      />
-      <div
-        id="modal-content"
-        style={{
-          position: "fixed",
-          inset: 0,
-          width: "100vw",
-          height: "100vh",
-          margin: "0 auto",
-          zIndex: 50,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-          }}
-        >
-          {children}
-        </div>
-      </div>
+      <Overlay open={open} overlay={overlay} solid={solid} />
+      <Content open={open}>
+        <div>{children}</div>
+      </Content>
     </>
   ) : null;
 };
