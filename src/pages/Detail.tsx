@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
 import Text from "../components/Text";
+import Input from "../components/Input";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 import { useGlobalContext } from "../context";
@@ -46,15 +47,15 @@ const PokeName = styled("div")(
     },
   },
   `
-    div:nth-child(1) {
+    div:nth-of-type(1) {
       height: 1.75rem;
       right: 20px;
     }
-    div:nth-child(2) {
+    div:nth-of-type(2) {
       height: 1.25rem;
       right: 10px;
     }
-    div:nth-child(3) {
+    div:nth-of-type(3) {
       height: 0.75rem;
       right: 0;
     }
@@ -105,10 +106,6 @@ const NicknamingForm = styled("form")({
   display: "flex",
   flexDirection: "column",
   gap: spacing.base,
-});
-
-const Input = styled("input")({
-  fontSize: fontSize.lg,
 });
 
 const Detail = () => {
@@ -262,7 +259,7 @@ const Detail = () => {
 
               <Input
                 required
-                className="pxl-border no-inset"
+                placeholder="enter a nickname"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setNickname(e.target.value.toUpperCase())}
               />
 
