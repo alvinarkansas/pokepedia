@@ -8,6 +8,7 @@ import Text from "../components/Text";
 import PokeCard from "../components/PokemonCard";
 import styled from "@emotion/styled";
 import { useGlobalContext } from "../context";
+import Loading from "../components/Loading";
 
 const Page = styled("div")({
   padding: "0 16px",
@@ -39,25 +40,32 @@ const Footer = styled("div")({
 const Explore = () => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
   const [pokeURL, setPokeURL] = useState<string>("https://pokeapi.co/api/v2/pokemon?limit=30&offset=0");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [navHeight, setNavHeight] = useState(0);
   const { state } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 
   const loadPokemons = async () => {
     if (pokeURL) {
-      const { data } = await axios.get<IAllPokemonResponse>(pokeURL);
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get<IAllPokemonResponse>(pokeURL);
 
-      const mapped = data.results.map((result) => {
-        const summaryIdx = state.pokeSummary!.findIndex((el) => el.name === result.name.toUpperCase());
-        return {
-          name: result.name,
-          url: result.url,
-          captured: state.pokeSummary![summaryIdx]?.captured || 0,
-        };
-      });
+        const mapped = data.results.map((result) => {
+          const summaryIdx = state.pokeSummary!.findIndex((el) => el.name === result.name.toUpperCase());
+          return {
+            name: result.name,
+            url: result.url,
+            captured: state.pokeSummary![summaryIdx]?.captured || 0,
+          };
+        });
 
-      setPokemons((prevState) => [...prevState, ...mapped]);
-      setPokeURL(data.next || "");
+        setPokemons((prevState) => [...prevState, ...mapped]);
+        setPokeURL(data.next || "");
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
     }
   };
 
@@ -80,9 +88,15 @@ const Explore = () => {
               </Link>
             ))}
         </Grid>
-        <Footer>
-          <Button onClick={() => loadPokemons()}>Load More</Button>
-        </Footer>
+        {!isLoading ? (
+          pokeURL && (
+            <Footer>
+              <Button onClick={() => loadPokemons()}>Load More</Button>
+            </Footer>
+          )
+        ) : (
+          <Loading label="Please wait..." />
+        )}
       </Page>
 
       <Navbar ref={navRef} />

@@ -14,6 +14,7 @@ import { keyframes } from "@emotion/react";
 import { useGlobalContext } from "../context";
 import { generatePokeSummary } from "../helpers";
 import TypeCard from "../components/TypeCard";
+import Loading from "../components/Loading";
 
 const Page = styled("div")({
   "#pokeball-bg": {
@@ -109,6 +110,20 @@ const NicknamingForm = styled("form")({
   gap: spacing.base,
 });
 
+const DescriptionLoadingWrapper = styled("div")({
+  div: {
+    justifyContent: "flex-start",
+  },
+});
+
+const ImageLoadingWrapper = styled("div")({
+  width: 256,
+  height: 256,
+  display: "grid",
+  placeItems: "center",
+  margin: "0 auto",
+});
+
 const Grid = styled("div")(
   {
     display: "grid",
@@ -138,12 +153,14 @@ const Detail = () => {
   const [nicknameModal, setNicknameModal] = useState(false);
   const [nicknameIsValid, setNicknameIsValid] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
   const { setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 
   const loadPokemon = async () => {
     try {
+      setIsLoading(true);
       const {
         data: { types, sprites, moves },
       } = await axios.get("https://pokeapi.co/api/v2/pokemon/" + name);
@@ -154,6 +171,7 @@ const Detail = () => {
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   const catchPokemon = () => {
@@ -311,33 +329,52 @@ const Detail = () => {
           </Text>
         </PokeName>
 
-        <PokeImg src={sprite} alt={name} width={256} height={256} />
+        {!isLoading ? (
+          <PokeImg src={sprite} alt={name} width={256} height={256} />
+        ) : (
+          <ImageLoadingWrapper>
+            <Loading />
+          </ImageLoadingWrapper>
+        )}
 
         <Content>
           <div>
             <Text as="h3">Type</Text>
-            {types.map((type, index: any) => (
-              <TypeCard key={index} type={type} />
-            ))}
+            {!isLoading ? (
+              types && types.map((type, index: any) => <TypeCard key={index} type={type} />)
+            ) : (
+              <DescriptionLoadingWrapper>
+                <Loading label="Loading types..." />
+              </DescriptionLoadingWrapper>
+            )}
           </div>
 
           <div>
             <Text as="h3">Moves</Text>
-            <Grid>
-              {moves.map((move, index: any) => (
-                <div key={index} className="pxl-border" style={{ marginBottom: 16, marginRight: 16 }}>
-                  <Text>{move}</Text>
-                </div>
-              ))}
-            </Grid>
+            {!isLoading ? (
+              <Grid>
+                {moves &&
+                  moves.map((move, index: any) => (
+                    <div key={index} className="pxl-border" style={{ marginBottom: 16, marginRight: 16 }}>
+                      <Text>{move}</Text>
+                    </div>
+                  ))}
+              </Grid>
+            ) : (
+              <DescriptionLoadingWrapper>
+                <Loading label="Loading moves..." />
+              </DescriptionLoadingWrapper>
+            )}
           </div>
         </Content>
       </Page>
 
       <Navbar ref={navRef} fadeHeight={224}>
-        <Button variant="moltres" onClick={() => throwPokeball()} size="xl" icon={pokeball}>
-          Catch
-        </Button>
+        {!isLoading && (
+          <Button variant="moltres" onClick={() => throwPokeball()} size="xl" icon={pokeball}>
+            Catch
+          </Button>
+        )}
       </Navbar>
     </>
   );
