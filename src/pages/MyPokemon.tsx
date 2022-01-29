@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import { IMyPokemon } from "../interface";
 import Text from "../components/Text";
 import PokeCard from "../components/PokemonCard";
-import DeleteButton from "../components/ButtonIcon";
+import DeleteButton from "../components/DeleteButton";
 import { spacing } from "../utils";
 import { useGlobalContext } from "../context";
 import { generatePokeSummary } from "../helpers";

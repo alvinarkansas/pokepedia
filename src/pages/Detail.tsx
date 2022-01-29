@@ -1,7 +1,7 @@
 import React, { FormEvent, ChangeEvent, useEffect, useState, createRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { theme, spacing, fontSize } from "../utils";
+import { theme, spacing } from "../utils";
 import pokeball from "../images/pokeball.png";
 import pokeballTransparent from "../images/pokeball-transparent.png";
 import Button from "../components/Button";
@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 import { useGlobalContext } from "../context";
 import { generatePokeSummary } from "../helpers";
+import TypeCard from "../components/TypeCard";
 
 const Page = styled("div")({
   "#pokeball-bg": {
@@ -107,6 +108,23 @@ const NicknamingForm = styled("form")({
   flexDirection: "column",
   gap: spacing.base,
 });
+
+const Grid = styled("div")(
+  {
+    display: "grid",
+    columnGap: 8,
+    rowGap: 0,
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+  },
+  `
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  `
+);
 
 const Detail = () => {
   const { name } = useParams();
@@ -299,19 +317,19 @@ const Detail = () => {
           <div>
             <Text as="h3">Type</Text>
             {types.map((type, index: any) => (
-              <div key={index} className="pxl-border inset">
-                <Text>{type}</Text>
-              </div>
+              <TypeCard key={index} type={type} />
             ))}
           </div>
 
           <div>
             <Text as="h3">Moves</Text>
-            {moves.map((move, index: any) => (
-              <div key={index} className="pxl-border" style={{ marginBottom: 16, marginRight: 16 }}>
-                <Text>{move}</Text>
-              </div>
-            ))}
+            <Grid>
+              {moves.map((move, index: any) => (
+                <div key={index} className="pxl-border" style={{ marginBottom: 16, marginRight: 16 }}>
+                  <Text>{move}</Text>
+                </div>
+              ))}
+            </Grid>
           </div>
         </Content>
       </Page>
