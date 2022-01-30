@@ -5,6 +5,7 @@ import Button from "../components/Button";
 import Navbar from "../components/Navbar";
 import { IMyPokemon } from "../interface";
 import Text from "../components/Text";
+import Modal from "../components/Modal";
 import PokeCard from "../components/PokemonCard";
 import DeleteButton from "../components/DeleteButton";
 import { spacing } from "../utils";
@@ -48,8 +49,26 @@ const EmptyState = styled("div")({
   gap: spacing.base,
 });
 
+const DeleteConfirmationModal = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: 32,
+  padding: "0 16px",
+  "div:last-child": {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 16,
+  },
+});
+
 const MyPokemon = () => {
   const [pokemons, setPokemons] = useState<IMyPokemon[]>([]);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false);
+  const [selectedPokemon, setSelectedPokemon] = useState<string>("");
   const [navHeight, setNavHeight] = useState<number>(0);
   const { setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
@@ -74,6 +93,29 @@ const MyPokemon = () => {
 
   return (
     <>
+      <Modal open={deleteConfirmation} overlay="light">
+        <DeleteConfirmationModal>
+          <div className="pxl-border" style={{ textAlign: "left" }}>
+            <Text>Are you sure you want to release {selectedPokemon}?</Text>
+            <br />
+            <Text>You'll have to catch another one and cannot undo this action</Text>
+          </div>
+
+          <div>
+            <Button
+              variant="moltres"
+              onClick={() => {
+                releasePokemon(selectedPokemon);
+                setDeleteConfirmation(false);
+              }}
+            >
+              Release
+            </Button>
+            <Button onClick={() => setDeleteConfirmation(false)}>Back</Button>
+          </div>
+        </DeleteConfirmationModal>
+      </Modal>
+
       <Page style={{ marginBottom: navHeight }}>
         <Header>
           <Text as="h1" variant="darker" size="lg">
@@ -90,7 +132,12 @@ const MyPokemon = () => {
               pokemons.reverse().map((pokemon: { name: string; nickname: string }) => (
                 <div key={pokemon.nickname} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <PokeCard name={pokemon.name} nickname={pokemon.nickname}>
-                    <DeleteButton onClick={() => releasePokemon(pokemon.nickname)} />
+                    <DeleteButton
+                      onClick={() => {
+                        setSelectedPokemon(pokemon.nickname);
+                        setDeleteConfirmation(true);
+                      }}
+                    />
                   </PokeCard>
                 </div>
               ))}
