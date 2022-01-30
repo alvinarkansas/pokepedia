@@ -18,7 +18,7 @@ After you picked a pokemon, there will also be a big red button. Press it to cat
 
 ### Give Nickname to A Pokemon
 
-After you successfully caught a pokemon, give nickname to it. Remember you cannot give a same nickname twice.
+After you successfully caught a pokemon, give nickname to it. Remember you cannot give the same nickname twice.
 
 ### Releasing A Pokemon
 
@@ -26,7 +26,7 @@ If you ever wanted to release your pokemon, you can do so by clicking the `x` bu
 
 ## 💡 About
 
-We miss the GBA & NDS pokemon era! Pokepedia proudly presents to you a pokemon minigame with retro look to reminisce the joy the old pokemon games brings.
+We miss the GBA & NDS pokemon era! Pokepedia proudly presents to you a pokemon minigame with retro look to reminisce the joy the old pokemon games bring.
 
 ### Progressive Web App
 
