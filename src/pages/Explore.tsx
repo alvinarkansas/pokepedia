@@ -12,25 +12,27 @@ import Loading from "../components/Loading";
 
 const Page = styled("div")({
   padding: "0 16px",
+  "@media (min-width: 1024px)": {
+    padding: "0 128px",
+  },
   h1: {
     padding: "16px 0",
   },
 });
 
-const Grid = styled("div")(
-  {
-    display: "grid",
-    gap: "16px",
+const Grid = styled("div")({
+  display: "grid",
+  gap: "16px",
+  "@media (min-width: 640px)": {
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
   },
-  `
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  `
-);
+  "@media (min-width: 1024px)": {
+    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+  },
+  "@media (min-width: 1280px)": {
+    gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+  },
+});
 
 const Footer = styled("div")({
   display: "flex",
@@ -39,9 +41,9 @@ const Footer = styled("div")({
 
 const Explore = () => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
-  const [pokeURL, setPokeURL] = useState<string>("https://pokeapi.co/api/v2/pokemon?limit=30&offset=0");
+  const [pokeURL, setPokeURL] = useState<string>("https://pokeapi.co/api/v2/pokemon?limit=60&offset=0");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [navHeight, setNavHeight] = useState(0);
+  const [navHeight, setNavHeight] = useState<number>(0);
   const { state } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 

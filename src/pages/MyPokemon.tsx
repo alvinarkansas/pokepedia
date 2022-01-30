@@ -13,6 +13,9 @@ import { generatePokeSummary } from "../helpers";
 
 const Page = styled("div")({
   padding: "0 16px",
+  "@media (min-width: 1024px)": {
+    padding: "0 128px",
+  },
 });
 
 const Header = styled("header")({
@@ -48,7 +51,7 @@ const EmptyState = styled("div")({
 
 const MyPokemon = () => {
   const [pokemons, setPokemons] = useState<IMyPokemon[]>([]);
-  const [navHeight, setNavHeight] = useState(0);
+  const [navHeight, setNavHeight] = useState<number>(0);
   const { setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 

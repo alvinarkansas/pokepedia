@@ -22,6 +22,12 @@ const Page = styled("div")({
     right: "-64vw",
     top: 0,
     zIndex: -1,
+    "@media (min-width: 640px)": {
+      right: "-32vw",
+    },
+    "@media (min-width: 1024px)": {
+      right: "-16vw",
+    },
   },
 });
 
@@ -34,12 +40,18 @@ const PokeName = styled("div")(
     position: "relative",
     height: "40px",
     width: "65vw",
+    "@media (min-width: 1024px)": {
+      width: "32vw",
+    },
     marginTop: spacing.xl,
     h1: {
       textTransform: "uppercase",
       position: "absolute",
       top: -20,
       left: 24,
+      "@media (min-width: 1024px)": {
+        left: 128,
+      },
     },
     div: {
       position: "absolute",
@@ -69,6 +81,9 @@ const Content = styled("div")({
   flexDirection: "column",
   gap: spacing.xl,
   padding: "0 16px",
+  "@media (min-width: 1024px)": {
+    padding: "0 128px",
+  },
   h3: {
     marginBottom: spacing.base,
   },
@@ -102,6 +117,9 @@ const PostCatchModal = styled("div")({
 const NicknamingModal = styled("div")({
   width: "100vw",
   padding: "0 16px",
+  "@media (min-width: 1024px)": {
+    width: "32vw",
+  },
 });
 
 const NicknamingForm = styled("form")({
@@ -143,18 +161,18 @@ const Grid = styled("div")(
 
 const Detail = () => {
   const { name } = useParams();
-  const [types, setTypes] = useState([]);
-  const [moves, setMoves] = useState([]);
-  const [sprite, setSprite] = useState("");
-  const [isCatching, setIsCatching] = useState(false);
-  const [isEndPhase, setIsEndPhase] = useState(false);
-  const [isCaught, setIsCaught] = useState(false);
-  const [nickname, setNickname] = useState("");
-  const [nicknameModal, setNicknameModal] = useState(false);
-  const [nicknameIsValid, setNicknameIsValid] = useState(true);
-  const [isSaved, setIsSaved] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [navHeight, setNavHeight] = useState(0);
+  const [types, setTypes] = useState<string[]>([]);
+  const [moves, setMoves] = useState<string[]>([]);
+  const [sprite, setSprite] = useState<string>("");
+  const [isCatching, setIsCatching] = useState<boolean>(false);
+  const [isEndPhase, setIsEndPhase] = useState<boolean>(false);
+  const [isCaught, setIsCaught] = useState<boolean>(false);
+  const [nickname, setNickname] = useState<string>("");
+  const [nicknameModal, setNicknameModal] = useState<boolean>(false);
+  const [nicknameIsValid, setNicknameIsValid] = useState<boolean>(true);
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [navHeight, setNavHeight] = useState<number>(0);
   const { setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 
