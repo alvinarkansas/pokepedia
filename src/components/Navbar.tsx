@@ -1,7 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import Button from "./Button";
 import styled from "@emotion/styled";
+import NavItem from "./NavItem";
 
 interface INavbarProps {
   children?: React.ReactNode;
@@ -49,12 +48,8 @@ const Navbar = React.forwardRef<HTMLDivElement, INavbarProps>(({ fadeHeight = 12
       <OuterNav>
         {children}
         <InnerNav>
-          <Link to="/" style={{ flexBasis: "50%", display: "flex" }}>
-            <Button>Explore</Button>
-          </Link>
-          <Link to="/my-pokemon" style={{ flexBasis: "50%", display: "flex" }}>
-            <Button variant="zapdos">My Pokemon</Button>
-          </Link>
+          <NavItem to="/" label="Explore" />
+          <NavItem to="/my-pokemon" label="My Pokemon" variant="zapdos" />
         </InnerNav>
       </OuterNav>
     </GradientBakcdrop>
