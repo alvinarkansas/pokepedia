@@ -1,14 +1,16 @@
 import React, { useState, useEffect, createRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import { IPokemon, IAllPokemonResponse } from "../interface";
+import Navbar from "../components/Navbar";
 import Button from "../components/Button";
 import Text from "../components/Text";
 import PokeCard from "../components/PokemonCard";
+import Loading from "../components/Loading";
+import Modal from "../components/Modal";
+import forest from "../images/poke-forest.gif";
 import styled from "@emotion/styled";
 import { useGlobalContext } from "../context";
-import Loading from "../components/Loading";
 
 const Page = styled("div")({
   padding: "0 16px",
@@ -34,6 +36,32 @@ const Grid = styled("div")({
   },
 });
 
+const StartScreen = styled("div")({
+  position: "relative",
+  img: {
+    width: "100vw",
+    height: "100vh",
+    objectFit: "cover",
+  },
+  "> div": {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "100vw",
+    padding: "0 16px",
+    display: "grid",
+    placeItems: "center",
+    gap: 32,
+  },
+  "> p:last-child": {
+    position: "absolute",
+    bottom: 32,
+    left: "50%",
+    transform: "translateX(-50%)",
+  },
+});
+
 const Footer = styled("div")({
   display: "flex",
   paddingTop: "24px",
@@ -44,7 +72,7 @@ const Explore = () => {
   const [pokeURL, setPokeURL] = useState<string>("https://pokeapi.co/api/v2/pokemon?limit=60&offset=0");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [navHeight, setNavHeight] = useState<number>(0);
-  const { state } = useGlobalContext();
+  const { state, setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
 
   const loadPokemons = async () => {
@@ -78,6 +106,21 @@ const Explore = () => {
 
   return (
     <>
+      <Modal open={state.startScreen!} solid>
+        <StartScreen>
+          <img src={forest} alt="forest" height={320} width={500} />
+          <div>
+            <Text variant="outlined" size="xl">
+              POKEPEDIA
+            </Text>
+            <Button onClick={() => setState({ startScreen: false })} variant="zapdos">
+              Press Start
+            </Button>
+          </div>
+          <Text variant="outlined">&copy;2022 alvinarkansas</Text>
+        </StartScreen>
+      </Modal>
+
       <Page style={{ marginBottom: navHeight }}>
         <Text as="h1" variant="darker" size="lg">
           Challenge &amp; catch them all
