@@ -1,12 +1,14 @@
 export interface IMyPokemon {
   name: string;
   nickname: string;
+  sprite?: string;
 }
 
 export interface IPokemon {
   name: string;
   captured?: number;
   url?: string;
+  sprite?: string;
 }
 
 export interface IPokeSummary {

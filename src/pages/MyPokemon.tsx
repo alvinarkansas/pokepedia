@@ -29,14 +29,15 @@ const Header = styled("header")({
 const Grid = styled("div")({
   display: "grid",
   gap: "16px",
+  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
   "@media (min-width: 640px)": {
-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-  },
-  "@media (min-width: 1024px)": {
     gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
   },
-  "@media (min-width: 1280px)": {
+  "@media (min-width: 1024px)": {
     gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+  },
+  "@media (min-width: 1280px)": {
+    gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
   },
 });
 
@@ -129,9 +130,9 @@ const MyPokemon = () => {
         {pokemons.length ? (
           <Grid>
             {pokemons.length &&
-              pokemons.reverse().map((pokemon: { name: string; nickname: string }) => (
+              pokemons.map((pokemon: IMyPokemon) => (
                 <div key={pokemon.nickname} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <PokeCard name={pokemon.name} nickname={pokemon.nickname}>
+                  <PokeCard name={pokemon.name} nickname={pokemon.nickname} sprite={pokemon.sprite}>
                     <DeleteButton
                       onClick={() => {
                         setSelectedPokemon(pokemon.nickname);

@@ -8,6 +8,7 @@ interface IPokeCard extends HTMLAttributes<HTMLDivElement> {
   name?: string;
   nickname?: string;
   captured?: number;
+  sprite?: string;
 }
 
 const getStyle = ({ nickname }: IPokeCard) => {
@@ -28,18 +29,24 @@ const getStyle = ({ nickname }: IPokeCard) => {
     &:active::after {
       box-shadow: inset ${nickname ? "-4px -4px" : "4px 4px"} ${theme.color["neutral-300"]};
     }
+    img {
+      margin: 0 auto;
+    }
   `;
 };
 
 const PixelatedPokeCard = styled("div")((props: IPokeCard) => getStyle(props));
 
-const PokeCard = ({ name, nickname, captured, children }: IPokeCard) => {
+const PokeCard = ({ name, nickname, captured, sprite, children }: IPokeCard) => {
   return (
     <PixelatedPokeCard nickname={nickname} className="pxl-border">
       {nickname && (
-        <Text variant="darker" size="lg">
-          {nickname}
-        </Text>
+        <>
+          <img src={sprite} alt={name} width={96} height={96} />
+          <Text variant="darker" size="lg">
+            {nickname}
+          </Text>
+        </>
       )}
       <Text>{name}</Text>
       {children}

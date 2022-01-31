@@ -221,7 +221,7 @@ const Detail = () => {
     e.preventDefault();
 
     const currentCollection = localStorage.getItem("myPokemon");
-    const parsed: { name: string; nickname: string }[] = JSON.parse(currentCollection!) || [];
+    const parsed: { name: string; nickname: string, sprite: string }[] = JSON.parse(currentCollection!) || [];
 
     let isUnique = true;
     for (let collection of parsed) {
@@ -239,6 +239,7 @@ const Detail = () => {
       parsed.push({
         name: name!.toUpperCase(),
         nickname,
+        sprite,
       });
       localStorage.setItem("myPokemon", JSON.stringify(parsed));
       setState({ pokeSummary: generatePokeSummary(parsed) });
