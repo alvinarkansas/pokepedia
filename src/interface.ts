@@ -24,3 +24,26 @@ export interface IAllPokemonResponse {
   previous?: string;
   results: IPokemon[];
 }
+
+export interface IPokemonDetailResponse {
+  name: string;
+  moves: {
+    move?: {
+      name?: string;
+      [other: string]: unknown;
+    };
+    [other: string]: unknown;
+  }[];
+  types: {
+    type?: {
+      name?: string;
+      [other: string]: unknown;
+    };
+    [other: string]: unknown;
+  }[];
+  sprites: {
+    front_default: string;
+    [other: string]: unknown;
+  };
+  [other: string]: unknown;
+}

@@ -2,7 +2,7 @@ import React, { ButtonHTMLAttributes } from "react";
 import { Link, useResolvedPath, useMatch } from "react-router-dom";
 import styled from "@emotion/styled";
 import Text from "./Text";
-import { theme } from "../utils";
+import { spacing, theme } from "../utils";
 
 interface INavItemProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "zapdos" | "moltres" | "articuno";
@@ -18,7 +18,7 @@ interface IStyleProps {
 const getStyle = ({ variant = "articuno", matched }: IStyleProps) => {
   let style = {
     display: "flex",
-    gap: 8,
+    gap: spacing.sm,
     justifyContent: "center",
     alignItems: "center",
     cursor: "pointer",

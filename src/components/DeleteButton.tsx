@@ -1,18 +1,18 @@
 import React, { ButtonHTMLAttributes } from "react";
 import styled from "@emotion/styled";
-import { theme } from "../utils";
+import { spacing, theme } from "../utils";
 
-const StyledDeleteButton = styled("button")`
-  padding: 4px;
-  z-index: 1;
-  cursor: pointer;
-  &:hover {
-    background-color: ${theme.color["neutral-200"]};
-  }
-  &:active::after {
-    box-shadow: inset 4px 4px ${theme.color["neutral-300"]};
-  }
-`;
+const StyledDeleteButton = styled("button")({
+  padding: spacing.xs,
+  zIndex: 1,
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: theme.color["neutral-200"],
+  },
+  "&:active::after": {
+    boxShadow: `inset 4px 4px ${theme.color["neutral-300"]}`,
+  },
+});
 
 const DeleteButton = ({ ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
@@ -22,7 +22,7 @@ const DeleteButton = ({ ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => 
           fillRule="evenodd"
           clipRule="evenodd"
           d="M0 0H3V3H0V0ZM6 6H3V3H6V6ZM9 6H6V9H3V12H0V15H3V12H6V9H9V12H12V15H15V12H12V9H9V6ZM12 3V6H9V3H12ZM12 3V0H15V3H12Z"
-          fill="#AF2A2A"
+          fill={theme.color["moltres-200"]}
         />
       </svg>
     </StyledDeleteButton>

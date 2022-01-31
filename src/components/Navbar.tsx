@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "@emotion/styled";
 import NavItem from "./NavItem";
+import { spacing } from "../utils";
 
 interface INavbarProps {
   children?: React.ReactNode;
   fadeHeight?: number;
-  [x: string]: any;
+  [other: string]: any;
 }
 
 const GradientBakcdrop = styled("div")({
@@ -17,14 +18,14 @@ const GradientBakcdrop = styled("div")({
 });
 
 const OuterNav = styled("nav")({
-  padding: 16,
+  padding: spacing.base,
   position: "absolute",
   left: 0,
   right: 0,
   bottom: 0,
   display: "flex",
   flexDirection: "column",
-  gap: 16,
+  gap: spacing.base,
   margin: "0 auto",
   "@media (min-width: 640px)": {
     width: "80vh",
@@ -33,7 +34,7 @@ const OuterNav = styled("nav")({
 
 const InnerNav = styled("div")({
   display: "flex",
-  gap: 16,
+  gap: spacing.base,
 });
 
 const Navbar = React.forwardRef<HTMLDivElement, INavbarProps>(({ fadeHeight = 124, children }, ref) => {

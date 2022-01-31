@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 import { useGlobalContext } from "../context";
 import { generatePokeSummary } from "../helpers";
+import { IPokemonDetailResponse } from "../interface";
 import TypeCard from "../components/TypeCard";
 import Loading from "../components/Loading";
 
@@ -181,7 +182,7 @@ const Detail = () => {
       setIsLoading(true);
       const {
         data: { types, sprites, moves },
-      } = await axios.get("https://pokeapi.co/api/v2/pokemon/" + name);
+      } = await axios.get<IPokemonDetailResponse>("https://pokeapi.co/api/v2/pokemon/" + name);
 
       setTypes(types.map((type: any) => type.type.name));
       setMoves(moves.map((move: any) => move.move.name));
@@ -221,7 +222,7 @@ const Detail = () => {
     e.preventDefault();
 
     const currentCollection = localStorage.getItem("myPokemon");
-    const parsed: { name: string; nickname: string, sprite: string }[] = JSON.parse(currentCollection!) || [];
+    const parsed: { name: string; nickname: string; sprite: string }[] = JSON.parse(currentCollection!) || [];
 
     let isUnique = true;
     for (let collection of parsed) {

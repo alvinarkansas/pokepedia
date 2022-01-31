@@ -130,7 +130,7 @@ const MyPokemon = () => {
         {pokemons.length ? (
           <Grid>
             {pokemons.length &&
-              pokemons.map((pokemon: IMyPokemon) => (
+              [...pokemons].reverse().map((pokemon: IMyPokemon) => (
                 <div key={pokemon.nickname} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <PokeCard name={pokemon.name} nickname={pokemon.nickname} sprite={pokemon.sprite}>
                     <DeleteButton

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import React, { ButtonHTMLAttributes } from "react";
 import Text from "./Text";
-import { theme } from "../utils";
+import { spacing, theme } from "../utils";
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "zapdos" | "moltres" | "articuno";
@@ -12,7 +12,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const getStyle = ({ variant = "articuno" }: IButtonProps) => {
   let style = {
     display: "flex",
-    gap: 8,
+    gap: spacing.sm,
     justifyContent: "center",
     alignItems: "center",
     cursor: "pointer",
