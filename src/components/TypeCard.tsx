@@ -58,6 +58,9 @@ const color: { [key: string]: string } = {
   "steel-100": "#DCDCF0",
   "steel-200": "#B8B8D0",
   "steel-300": "#787887",
+  "fairy-100": "#FFD9DD",
+  "fairy-200": "#F0B6BC",
+  "fairy-300": "#D87881",
 };
 
 const PixelatedTypeCard = styled("div")(({ type }: ITypeCardProps) => {
