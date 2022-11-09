@@ -34,6 +34,7 @@ const Page = styled("div")({
 
 const PokeImg = styled("img")({
   margin: "0 auto",
+  padding: 16,
 });
 
 const PokeName = styled("div")(
@@ -186,7 +187,8 @@ const Detail = () => {
 
       setTypes(types.map((type: any) => type.type.name));
       setMoves(moves.map((move: any) => move.move.name));
-      setSprite(sprites.front_default);
+      setSprite(sprites.versions?.["generation-v"]?.["black-white"]?.animated?.front_default || sprites.front_default)
+      // setSprite(sprites.front_default);
     } catch (error) {
       console.log(error);
     }
@@ -257,7 +259,7 @@ const Detail = () => {
     <>
       <Modal open={isCatching}>
         <CatchingModal>
-          <PokeImg src={sprite} alt={name} width={320} height={320} />
+          <PokeImg src={sprite} alt={name} width={176} height={176} />
 
           <div style={{ display: "grid", placeItems: "center" }}>
             <img className="pokeball" src={pokeball} alt="pokeball" width={128} height={128} />
@@ -272,7 +274,7 @@ const Detail = () => {
         <>
           <Modal open={!isCaught} overlay="error">
             <PostCatchModal>
-              <PokeImg src={sprite} alt={name} width={320} height={320} />
+              <PokeImg src={sprite} alt={name} width={176} height={176} />
 
               <img src={pokeball} alt="pokeball" width={128} height={128} />
               <Text variant="outlined" size="xl">
@@ -282,7 +284,7 @@ const Detail = () => {
           </Modal>
           <Modal open={isCaught} overlay="light">
             <PostCatchModal>
-              <PokeImg src={sprite} alt={name} width={320} height={320} />
+              <PokeImg src={sprite} alt={name} width={176} height={176} />
 
               <img src={pokeball} alt="pokeball" width={128} height={128} />
               <Text variant="outlined" size="xl">
@@ -295,7 +297,7 @@ const Detail = () => {
 
       <Modal open={nicknameModal} overlay="light" solid>
         <NicknamingModal>
-          <PokeImg src={sprite} alt={name} width={320} height={320} />
+          <PokeImg src={sprite} alt={name} width={176} height={176} />
 
           {!isSaved ? (
             <NicknamingForm onSubmit={onNicknameSave}>

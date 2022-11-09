@@ -99,6 +99,14 @@ const Explore = () => {
     }
   };
 
+  const getPokemonId = (url?: string) => {
+    const splitted = url?.split('/');
+    if (splitted?.length) {
+      return splitted[splitted.length - 2]
+    }
+    return ""
+  }
+
   useEffect(() => {
     setNavHeight(navRef.current?.clientHeight!);
     loadPokemons();
@@ -129,7 +137,7 @@ const Explore = () => {
           {pokemons.length &&
             pokemons.map((pokemon: IPokemon) => (
               <Link key={pokemon.name} to={"/" + pokemon.name} style={{ display: "flex" }}>
-                <PokeCard name={pokemon.name} captured={pokemon.captured} />
+                <PokeCard pokemonId={getPokemonId(pokemon.url)} name={pokemon.name} captured={pokemon.captured} />
               </Link>
             ))}
         </Grid>

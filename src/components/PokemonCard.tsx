@@ -5,6 +5,7 @@ import Text from "./Text";
 import { theme } from "../utils";
 
 interface IPokeCard extends HTMLAttributes<HTMLDivElement> {
+  pokemonId?: number | string;
   name?: string;
   nickname?: string;
   captured?: number;
@@ -37,16 +38,18 @@ const getStyle = ({ nickname }: IPokeCard) => {
 
 const PixelatedPokeCard = styled("div")((props: IPokeCard) => getStyle(props));
 
-const PokeCard = ({ name, nickname, captured, sprite, children }: IPokeCard) => {
+const PokeCard = ({ name, nickname, captured, sprite, children, pokemonId }: IPokeCard) => {
   return (
     <PixelatedPokeCard nickname={nickname} className="pxl-border">
-      {nickname && (
+      {nickname ? (
         <>
           <img src={sprite} alt={name} width={96} height={96} />
           <Text variant="darker" size="lg">
             {nickname}
           </Text>
         </>
+      ) : (
+        <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`} />
       )}
       <Text>{name}</Text>
       {children}
