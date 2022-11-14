@@ -68,18 +68,20 @@ const Footer = styled("div")({
 });
 
 const Explore = () => {
-  const [pokemons, setPokemons] = useState<IPokemon[]>([]);
   const [pokeURL, setPokeURL] = useState<string>("https://pokeapi.co/api/v2/pokemon?limit=60&offset=0");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [navHeight, setNavHeight] = useState<number>(0);
   const { state, setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
+  const footerRef = createRef<HTMLDivElement>();
 
   const loadPokemons = async () => {
     if (pokeURL) {
       try {
         setIsLoading(true);
-        const { data } = await axios.get<IAllPokemonResponse>(pokeURL);
+        const { data } = await axios.get<IAllPokemonResponse>("https://pokeapi.co/api/v2/pokemon",
+          { params: { limit: 60, offset: state.pokemons?.length } }
+        );
 
         const mapped = data.results.map((result) => {
           const summaryIdx = state.pokeSummary!.findIndex((el) => el.name === result.name.toUpperCase());
@@ -90,7 +92,7 @@ const Explore = () => {
           };
         });
 
-        setPokemons((prevState) => [...prevState, ...mapped]);
+        setState({ pokemons: [...state.pokemons!, ...mapped] });
         setPokeURL(data.next || "");
       } catch (error) {
         console.log(error);
@@ -98,6 +100,13 @@ const Explore = () => {
       setIsLoading(false);
     }
   };
+
+  const updateCaptureInfo = () => {
+    state.pokemons?.forEach((pokemon) => {
+      const summaryIdx = state.pokeSummary!.findIndex((el) => el.name === pokemon.name.toUpperCase());
+      pokemon.captured = state.pokeSummary![summaryIdx]?.captured || 0;
+    });
+  }
 
   const getPokemonId = (url?: string) => {
     const splitted = url?.split('/');
@@ -109,8 +118,19 @@ const Explore = () => {
 
   useEffect(() => {
     setNavHeight(navRef.current?.clientHeight!);
-    loadPokemons();
+    if (!state.pokemons?.length) {
+      loadPokemons();
+    } else {
+      footerRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, []);
+
+  useEffect(() => {
+    updateCaptureInfo();
+    if (state.pokemons?.length === 60) {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }, [state.pokemons])
 
   return (
     <>
@@ -134,8 +154,8 @@ const Explore = () => {
           Challenge &amp; catch them all
         </Text>
         <Grid>
-          {pokemons.length &&
-            pokemons.map((pokemon: IPokemon) => (
+          {state.pokemons!.length &&
+            state.pokemons!.map((pokemon: IPokemon) => (
               <Link key={pokemon.name} to={"/" + pokemon.name} style={{ display: "flex" }}>
                 <PokeCard pokemonId={getPokemonId(pokemon.url)} name={pokemon.name} captured={pokemon.captured} />
               </Link>
@@ -143,7 +163,7 @@ const Explore = () => {
         </Grid>
         {!isLoading ? (
           pokeURL && (
-            <Footer>
+            <Footer ref={footerRef}>
               <Button onClick={() => loadPokemons()}>Load More</Button>
             </Footer>
           )
