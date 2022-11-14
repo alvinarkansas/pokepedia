@@ -1,6 +1,6 @@
 import { IMyPokemon, IPokeSummary } from "../interface";
 
-export const generatePokeSummary = (pokemons: IMyPokemon[]): IPokeSummary[] => {
+export const  generatePokeSummary = (pokemons: IMyPokemon[]): IPokeSummary[] => {
   let results: { name: string; captured: number }[] = [];
 
   pokemons.forEach((pokemon, idx) => {
