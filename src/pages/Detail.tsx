@@ -174,6 +174,7 @@ const Detail = () => {
   const [nicknameIsValid, setNicknameIsValid] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [navHeight, setNavHeight] = useState<number>(0);
   const { setState } = useGlobalContext();
   const navRef = createRef<HTMLDivElement>();
@@ -188,7 +189,6 @@ const Detail = () => {
       setTypes(types.map((type: any) => type.type.name));
       setMoves(moves.map((move: any) => move.move.name));
       setSprite(sprites.versions?.["generation-v"]?.["black-white"]?.animated?.front_default || sprites.front_default)
-      // setSprite(sprites.front_default);
     } catch (error) {
       console.log(error);
     }
@@ -250,9 +250,18 @@ const Detail = () => {
     }
   };
 
+  const onScroll = () => {
+    setIsScrolling(true)
+    setTimeout(() => {
+      setIsScrolling(false)
+    }, 1200)
+  }
+
   useEffect(() => {
     setNavHeight(navRef.current?.clientHeight!);
     loadPokemon();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -391,7 +400,7 @@ const Detail = () => {
         </Content>
       </Page>
 
-      <Navbar ref={navRef} fadeHeight={224}>
+      <Navbar ref={navRef} fadeHeight={224} visible={!isScrolling}>
         {!isLoading && (
           <Button variant="moltres" onClick={() => throwPokeball()} size="xl" icon={pokeball}>
             Catch
